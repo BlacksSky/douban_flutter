@@ -1,3 +1,4 @@
+import 'widget_pub/zy_dashed_line.dart';
 import 'package:flutter/material.dart';
 import 'widget_pub/zy_start_rating.dart';
 
@@ -36,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(child: ZYStartRating(20.0)),
+      body: Center(child: ZYDashedLine(size: 30,height: 1,gapWidth: 5,lineWidth: 3,direction: Axis.horizontal,)),
     );
   }
 }
