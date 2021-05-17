@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 class ZYDashedLine extends StatefulWidget {
   final double size; //大小，水平时代表宽，垂直时代表高
-  final double height;//高度，虚线的厚度
-  final double gapWidth;//间隔的宽度
-  final double lineWidth;//虚线的宽度
-  final Axis direction;//
+  final double height; //高度，虚线的厚度
+  final double lineWidth; //虚线的宽度
+  final double gapWidth; //间隔的宽度
+  final Color lineColor;
+  final Color gapColor;
+  final Axis direction;
   int _count;
 
   ZYDashedLine({
     @required this.size,
     this.height = 1,
-    this.gapWidth = 1,
     this.lineWidth = 2,
+    this.gapWidth = 1,
+    this.lineColor = Colors.lightGreenAccent,
+    this.gapColor = Colors.transparent,
     this.direction = Axis.horizontal,
   });
 
@@ -25,18 +30,14 @@ class _ZYDashedLineState extends State<ZYDashedLine> {
   @override
   @override
   Widget build(BuildContext context) {
-    widget._count =
-        ((widget.size + widget.gapWidth) / (widget.gapWidth + widget.lineWidth))
-            .floor();
+    widget._count = calculateCount();
 
     double width = widget.size;
     double height = widget.height;
-    print("direction:${widget.direction},width:$width,height:$height");
     if (widget.direction == Axis.vertical) {
       width = widget.height;
       height = widget.size;
     }
-    print("direction:${widget.direction},width:$width,height:$height");
 
     return Container(
       child: Flex(
@@ -51,22 +52,50 @@ class _ZYDashedLineState extends State<ZYDashedLine> {
 
   //  获取虚线列表
   List<Widget> dashedList() {
-    double width = widget.lineWidth;
-    double height = widget.size;
+    double lineWidth = widget.lineWidth;
+    double lineHeight = widget.height;
+    double gapWidth = widget.gapWidth;
+    double gapHeight = widget.height;
+    double lineGapHeight = lineWidth + gapWidth;
+    double lastLineWidth = widget.size - lineGapHeight;
+    double lastLineHeight = widget.height;
     if (widget.direction == Axis.vertical) {
-      width = widget.size;
-      height = widget.lineWidth;
+      lineWidth = widget.height;
+      lineHeight = widget.lineWidth;
+      gapWidth = widget.height;
+      gapHeight = widget.gapWidth;
+      lineGapHeight = lineHeight + gapHeight;
+      lastLineWidth = widget.height;
+      lastLineHeight = widget.size - lineGapHeight;
     }
     List<Widget> list = [];
-    SizedBox lineBox = buildLineBox(width, height);
-    SizedBox gapBox = buildGapBox(width, height);
+    SizedBox lineBox = buildLineBox(lineWidth, lineHeight);
+    SizedBox gapBox = buildGapBox(gapWidth, gapHeight);
 
-    for (int i = 0; i < (this.widget._count - 1); i++) {
+    if (this.widget._count == 1) {
       list.add(lineBox);
       list.add(gapBox);
+    } else {
+      lastLineWidth = widget.size - lineGapHeight * this.widget._count;
+      if (widget.direction == Axis.vertical) {
+        lastLineHeight = widget.size - lineGapHeight * this.widget._count;
+        lastLineWidth = widget.height;
+      }
+
+      for (int i = 0; i < this.widget._count; i++) {
+        list.add(lineBox);
+        list.add(gapBox);
+      }
     }
-    list.add(lineBox);
+
+    SizedBox halfWidget = buildLineBox(lastLineWidth, lastLineHeight);
+    list.add(halfWidget);
     return list;
+  }
+
+  int calculateCount() {
+    int count = (widget.size / (widget.gapWidth + widget.lineWidth)).floor();
+    return count;
   }
 
   // 线
@@ -75,7 +104,7 @@ class _ZYDashedLineState extends State<ZYDashedLine> {
         width: width,
         height: height,
         child: DecoratedBox(
-          decoration: BoxDecoration(color: Colors.green),
+          decoration: BoxDecoration(color: widget.lineColor),
         ));
   }
 
@@ -85,7 +114,7 @@ class _ZYDashedLineState extends State<ZYDashedLine> {
         width: width,
         height: height,
         child: DecoratedBox(
-          decoration: BoxDecoration(color: Colors.yellow),
+          decoration: BoxDecoration(color: widget.gapColor),
         ));
   }
 }

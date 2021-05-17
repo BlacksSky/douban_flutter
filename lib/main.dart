@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(child: ZYDashedLine(size: 30,height: 1,gapWidth: 5,lineWidth: 3,direction: Axis.horizontal,)),
+      body: Center(child: ZYDashedLine(size: 105,height: 150,lineWidth: 100,gapWidth: 5,lineColor: Colors.red,gapColor: Colors.green,direction: Axis.vertical,)),
     );
   }
 }
