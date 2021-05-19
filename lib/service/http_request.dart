@@ -18,10 +18,15 @@ class ZYHttpRequest {
 
     addInterceptor();
 
+    Map<String, dynamic> allParams = ZYHttpConfig.baseParams;
+    if(params != null){
+      allParams.addAll(params);
+    }
+
     try {
-      print("url:$url");
+      print("url:$url,params:${allParams}");
       Response response =
-          await dio.request(url, queryParameters: params, options: options);
+          await dio.request(url, queryParameters: allParams, options: options);
       return response.data;
     } on DioError catch (error) {
       return Future.error(error);
