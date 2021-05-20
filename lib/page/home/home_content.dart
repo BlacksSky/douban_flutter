@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../../model/home/home_request.dart';
 import '../../model/home/home_model.dart';
+import 'home_content_item.dart';
 
 class ZYHomeContent extends StatefulWidget {
   @override
@@ -29,7 +30,7 @@ class _ZYHomeContentState extends State<ZYHomeContent> {
     return Center(
       child: ListView.builder(
         itemBuilder: (BuildContext content, int index) {
-          return Text(_list[index].author, style: TextStyle(fontSize: 20));
+          return ZYHomeContentItem(_list[index]);
         },
         itemCount: _list.length,
       ),

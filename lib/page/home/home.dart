@@ -7,6 +7,7 @@ class ZYHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text("首页"),),
       body: ZYHomeContent(),
+      backgroundColor: Color(0XFFF5F5F5),
     );;
   }
 }
